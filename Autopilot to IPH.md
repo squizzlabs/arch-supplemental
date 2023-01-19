@@ -8,7 +8,8 @@ This code assumes that you have landed. Attempting to use this code while not la
 * Attach buttons to your chair or remote controller, ensure buttons are named to match your IPH locations. If you're not sure how to name a button, go into build mode, right click the button, and select Rename Element.
 * Ctrl-L on your chair/remote, add the following code to Library / On Start (you will likely need to create the event):
 
-```function AP2IPH(slot)
+````
+function AP2IPH(slot)
     local targetIPH = slot.getName()
     local attempts = 0
     if not __wrap_lua__stopped and script.onActionStart then 
@@ -40,8 +41,9 @@ This code assumes that you have landed. Attempting to use this code while not la
             local a,b=xpcall(script.onActionStart,__wrap_lua__traceback,"stopengines",system) if not a then __wrap_lua__error(b) end
         end 
     end
-end```
+end
+````
 
-And then for each button that you've connected, select that slot and add the event On Pressed, then enter the following example code, be sure the slot specified matches:
+* And then for each button that you've connected, select that slot and add the event On Pressed, then enter the following example code, be sure the slot specified matches:
 
     AP2IPH(slot10)
