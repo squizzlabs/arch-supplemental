@@ -9,23 +9,38 @@ This code assumes that you have landed. Attempting to use this code while not la
 * Ctrl-L on your chair/remote, add the following code to Library / On Start (you will likely need to create the event):
 
 ````
+local function msg(msgt)
+    if not msgt then return end
+    if msgText == nil then msgText = "empty" end
+    if msgText ~= "empty" then 
+        if not string.find(msgText, msgt) then 
+            msgText = msgText.."\n"..msgt
+            msgTimer = 7 
+        end
+    else 
+        msgText = msgt 
+    end
+end
+
 function AP2IPH(slot)
     local targetIPH = slot.getName()
     local attempts = 0
-    if not __wrap_lua__stopped and script.onActionStart then 
+    if not __wrap_lua__stopped and script and script.onActionStart then 
         while CustomTarget == nil or CustomTarget.name ~= targetIPH and attempts < 25 do
-            local a,b=xpcall(script.onActionStart,__wrap_lua__traceback,"option1",system) if not a then __wrap_lua__error(b) end
             attempts = attempts + 1
+            local a,b=xpcall(script.onActionStart,__wrap_lua__traceback,"option1",system) if not a then __wrap_lua__error(b) end
         end
     end
     if CustomTarget == nil or CustomTarget.name ~= targetIPH then
-        system.print("Unable to locate within IPH: " .. targetIPH) 
+        msgTimer = 5
+        msg("Unable to locate within IPH: " .. targetIPH) 
     else
-        system.print("Starting Autopilot to IPH location: " .. targetIPH)
+        msgTimer = 5
         local targetDistance = (worldPos - CustomTarget.position):len()
         if targetDistance < 1000 then
-            system.print("Target IPH, " .. targetIPH .. ", is too close, please select a target >1km away.")
+            msg("Target IPH, " .. targetIPH .. ", is too close, please select a target >1km away.")
         else
+            msg("Starting Autopilot to IPH location: " .. targetIPH)
             AltIsOn = true
             -- Don't orbit hop if less than 50km away
             if targetDistance <= 50000 then
